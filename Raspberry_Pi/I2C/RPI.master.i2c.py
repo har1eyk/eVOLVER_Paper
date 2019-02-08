@@ -1,30 +1,31 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
-import smbus
+from smbus2 import SMBus
 import time
-#for RPI version 1, use "bus = smbus.SMBus(0)"
-bus = smbus.SMBus(1)
 
-#This is the address we setup in the Arduino Program
+# This is the address we setup in the Arduino Program
 address = 0x04
+# Open i2c bus 1 
+bus = SMBus(1)
 
 def writeNumber(value):
-	bus.write_byte(address, value)
-	# bus.write_byte_data(address, 0, value)
-	return -1
+	# Write a byte to address, offset 0
+	bus.write_byte_data(address, 0, value)
+	return
 
 def readNumber():
-	number = bus.read_byte(address)
+	#read one byte from address 80, offset 0
+	number = bus.read_byte_data(address, 0)
 	# number = bus.read_byte_data(address, 1)
 	return number
 
 while True:
-	var = input("Enter 1to9: ")
+	var = int(input("Enter 1 to 9: "))
 	if not var:
 		continue
 	writeNumber(var)
-	print ("RPI: Hi Arduino, I sent you "), var
+	print ("RPI: Hi Arduino, I sent you ", var)
 	# sleep one second
 	time.sleep(1)
 	number = readNumber()
-	print ("Arduino: Hey RPI, I received a digit "), number
+	print ("Arduino: Hey RPI, I received a digit ", number)
