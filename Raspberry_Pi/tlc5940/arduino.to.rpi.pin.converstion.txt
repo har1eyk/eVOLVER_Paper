@@ -1,0 +1,12 @@
+
++----------------+-----------+------------+-----------+
+|  TLC Pin Name  | GPIO_Pins | PWP Layout | eVOLVER   |
++----------------+-----------+------------+-----------+
+| BLANK blankpin |        27 |          2 | 5"Uco_A0" |
+| VPRG progpin   |        22 |          6 | no use *  |
+| XLAT latchpin  |        17 |          3 | 11"Uco_D3"|
+| GSCLK gsclkpin |        18 |         25 | 9"Uco_D2" |
+| SIN serialpin  |        23 |          5 | 15"Uco_D5"|
+| SCLK clkpin    |        24 |          4 | 13"Uco_D4"|
++----------------+-----------+------------+-----------+
+
