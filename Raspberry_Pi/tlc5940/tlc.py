@@ -18,9 +18,8 @@ from math import floor
 class tlc5940(object):
     "Texas Instruments TLC5940 driver for Raspberry Pi"
 
-    def __init__(self, blankpin, progpin, latchpin, gsclkpin, serialpin, clkpin):
+    def __init__(self, blankpin, latchpin, gsclkpin, serialpin, clkpin):
         self._blankpin = blankpin
-        self._progpin = progpin
         self._latchpin = latchpin
         self._gsclkpin = gsclkpin
         self._serialpin = serialpin
@@ -36,7 +35,6 @@ class tlc5940(object):
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self._blankpin, GPIO.OUT)
-        GPIO.setup(self._progpin, GPIO.OUT)
         GPIO.setup(self._latchpin, GPIO.OUT)
         GPIO.setup(self._gsclkpin, GPIO.OUT)
         GPIO.setup(self._serialpin, GPIO.OUT)
@@ -71,7 +69,6 @@ class tlc5940(object):
     def reset(self):
         'Reset pin values'
         GPIO.output(self._blankpin, 1) # set high to disable output (blank)
-        GPIO.output(self._progpin, 0) # high to write dot data and low for greyscale
         GPIO.output(self._latchpin, 0) # set high to complete a write to register
         GPIO.output(self._clkpin, 0)
         GPIO.output(self._serialpin, 0)
@@ -100,10 +97,9 @@ class tlc5940(object):
 
         self._dotvalues[15-out] = value
 
+# don't use this because no progpin 'VPRG'
     def write_dot_values(self):
         'Send all dot values to the TLC chip'
-        GPIO.output(self._progpin, 1) 
-        # In theory, sleep for 10ns - VPRG to SCLK
         self.writeserial(self._dotvalues, 6) # write 6 bits of data
         # In theory, sleep for 10ns - SCLK to XLAT
         GPIO.output(self._latchpin, 1) 
@@ -125,7 +121,6 @@ class tlc5940(object):
 
     def write_grey_values(self):
         'Send all grey values to TLC chip'
-        GPIO.output(self._progpin, 0) 
         # In theory, sleep for 10ns - VPRG to SCLK
         self.writeserial(self._greyvalues, 12) # write 12 bits of data
         # In theory sleep for 10ns - SCLK to XLAT

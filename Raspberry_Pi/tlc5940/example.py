@@ -21,7 +21,6 @@ from tlc import tlc5940
 # http://webofthings.org/wp-content/uploads/2016/10/pi-gpio.png
 # RPi 3 GPIO 
 leds = tlc5940(blankpin = 27,
-               progpin = 22,
                latchpin = 17,
                gsclkpin = 18,
                serialpin = 23,
