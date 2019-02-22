@@ -16,7 +16,7 @@
 # Note the pin configuration to replicate on a Rasperry Pi
 
 from tlc import tlc5940
-
+import time
 # the numbers represent BCM convention e.g. "GPIO24" on RPi 3
 # http://webofthings.org/wp-content/uploads/2016/10/pi-gpio.png
 # RPi 3 GPIO 
@@ -43,31 +43,38 @@ leds = tlc5940(blankpin = 27,
 # | SCLK clkpin    |        24 |          4 | 13"Uco_D4"|
 # +----------------+-----------+------------+-----------+
 # * this pin is grounded in eVOLVER. From TLC spec sheet: "When VPRG = GND, the device is in GS mode." GS = grayscale
+# see tlc5940 programming spec sheet: http://bit.ly/2Irodyz
 
 try:
+    pre_initialise = time.perf_counter()
     leds.initialise()
+    post_initialise = time.perf_counter()
+    print ("time to initialize (sec): ", post_initialise - pre_initialise)
 
     step = 100
+
 
     intensities_val = [0] * 16
     intensities_dir = [0] * 16
     led_index = 0
-    print ("successful initilization")
+
     while 1:
-        # Do the setting and displaying
+       # Do the setting and displaying
         for led in range (0, 16):
-            # leds.set_grey(led, intensities_val[led]) 
-            print ("Setting: ", led, "to range: ", )
+            leds.set_grey(led, intensities_val[led]) 
+            # print (leds.set_grey(led, intensities_val[led]))        
 
         leds.write_grey_values()
         leds.pulse_clk()
 
         # Update LEDs
         animating = 0
+        # print ("animating val before loop = ", animating)
         for ledval in intensities_val:
             if ledval > 0: animating = 1
         if animating == 0:
             led_index = 0
+        # print ("animating val after loop = ", animating)
                         
         if led_index < 16 and intensities_val[led_index] == 0:
             intensities_dir[led_index] = step
@@ -82,7 +89,8 @@ try:
 
         
 except KeyboardInterrupt:
-    print ("keyboard interruptus")
-#     pass
+    print ("\nkeyboard interruptus")
+# #     pass
     leds.blank(1)
     leds.cleanup() # may cause odd flickering due to default Rpi pin settings.
+    print ("\nGPIO set to 0")

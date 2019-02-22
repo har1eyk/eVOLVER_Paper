@@ -24,7 +24,7 @@ class tlc5940(object):
         self._gsclkpin = gsclkpin
         self._serialpin = serialpin
         self._clkpin = clkpin
-        self._dotvalues = [0xFF] * 16
+        self._dotvalues = [0xFF] * 16 # don't use dotvalues
         self._greyvalues = [0xFFFF] * 16
         self._first = 1
 
@@ -32,7 +32,8 @@ class tlc5940(object):
         'Initialise the Raspberry Pi pins and the TLC chip'
         # TLC5940 doesn't use a serial protocal. Bit banging seems to be the
         # only way to drive this chip.
-        GPIO.setwarnings(False)
+        GPIO.setwarnings(True)
+        #GPIO.setup
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self._blankpin, GPIO.OUT)
         GPIO.setup(self._latchpin, GPIO.OUT)
@@ -56,6 +57,9 @@ class tlc5940(object):
                 
     def pulse_clk(self):
         'Bit bang the clock and blank pin'
+        # val is an integer expressing 1 or 0.
+        # If set to 1 then the outputs will be disabled. 
+        # If 0 then outputs will be enabled and use the register dot and grey value settings.
         self.blank(1)
         self.blank(0)
         for i in range(0,4096):
@@ -116,8 +120,11 @@ class tlc5940(object):
         # Constrain out index
         if out < 0: out = 0
         elif out > 15: out = 15
-
-        self._greyvalues[15-out] = value
+        # print ("Led (out) is: ", out, " set to: ", value)
+        self._greyvalues[15-out] = value # everses orientation perhaps due to Big-Endian
+        print (self._greyvalues)
+        # print ("Led (out) is: ", self._greyvalues[out], " set to: ", value)
+        # print (self._greyvalues)
 
     def write_grey_values(self):
         'Send all grey values to TLC chip'
