@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
-# This tests the tlc5940 chip by activating 1 of the 16 channels
-# All channels can also be used for testing
+# This tests the tlc5940 chip by activating 1 or all of the 16 channels
 
 
 from tlc import tlc5940
@@ -13,7 +12,7 @@ import time
 # +----------------+-----------+------------+-----------+
 # |  TLC Pin Name  | GPIO_Pins | PWP Layout | eVOLVER   |
 # +----------------+-----------+------------+-----------+
-# | BLANK blankpin |        27 |          2 | 5"Uco_A0" |
+# | BLANK blankpin |        27 |          2 | 5"Uco_A1" |
 # | VPRG progpin   |        22 |          6 | no use *  |
 # | XLAT latchpin  |        17 |          3 | 11"Uco_D3"|
 # | GSCLK gsclkpin |        18 |         25 | 9"Uco_D2" |
@@ -40,11 +39,12 @@ try:
         leds.write_grey_values()
         leds.pulse_clk()
 
-        intensities_val=[0,0,0,0,4000,0,0,0,0,0,0,0,0,0,0,0]
-        
+        intensities_val=[3500,3500,3500,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        # intensities_val=[1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200]
+        # intensities_val=[100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100]
+                
 except KeyboardInterrupt:
     print ("\nkeyboard interruptus")
-# #     pass
     leds.blank(1)
     leds.cleanup() # may cause odd flickering due to default Rpi pin settings.
     print ("\nGPIO set to 0")
