@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # TLC5940 Driver for Python Copyright (C) 2017  Aidan Holmes
 #
 # This program is free software: you can redistribute it and/or modify
@@ -122,8 +124,8 @@ class tlc5940(object):
         elif out > 15: out = 15
         # print ("Led (out) is: ", out, " set to: ", value)
         self._greyvalues[15-out] = value # everses orientation perhaps due to Big-Endian
-        print (self._greyvalues)
-        # print ("Led (out) is: ", self._greyvalues[out], " set to: ", value)
+        # print (self._greyvalues)
+        # print ("Led (out) is: ", self._greyvalues[15-out], " set to: ", value)
         # print (self._greyvalues)
 
     def write_grey_values(self):
